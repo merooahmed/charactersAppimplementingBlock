@@ -1,4 +1,5 @@
 import 'package:breakingbadproject/businesslogic/cubit/characters_cubit.dart';
+import 'package:breakingbadproject/data/models/charactersmodel.dart';
 import 'package:breakingbadproject/data/repositories/character_repository.dart';
 import 'package:breakingbadproject/data/web_services.dart';
 import 'package:breakingbadproject/representation/screens/characteres_screen.dart';
@@ -25,8 +26,10 @@ class AppRouter {
                   child: const CharactersScreen(),
                 ));
       case secondscreen:
+      final character=settings.arguments as CharactersModel;
         return MaterialPageRoute(
-            builder: (_) => const CharacteresdetailsScreen());
+
+            builder: (_) => CharacteresdetailsScreen(character: character,));
     }
     return null;
   }
