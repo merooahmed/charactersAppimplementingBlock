@@ -1,6 +1,11 @@
+import 'dart:math';
+
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:breakingbadproject/businesslogic/cubit/characters_cubit.dart';
 import 'package:breakingbadproject/constants/colors.dart';
 import 'package:breakingbadproject/data/models/charactersmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CharacteresdetailsScreen extends StatelessWidget {
   const CharacteresdetailsScreen({super.key, required this.character});
@@ -13,7 +18,6 @@ class CharacteresdetailsScreen extends StatelessWidget {
       stretch: true,
       backgroundColor: grey,
       flexibleSpace: FlexibleSpaceBar(
-        
         centerTitle: true,
         title: Text(
           character.name,
@@ -65,8 +69,45 @@ class CharacteresdetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget displayRandomEpisode() {
+    var episodeList = character.episode;
+    if (episodeList.length == 1) {
+      return buildFlickerText(episodeList[0]);
+    }else{
+       int randomepisode = Random().nextInt(episodeList.length - 1);
+      return buildFlickerText(episodeList[randomepisode]);
+    }
+   
+  }
+
+  Widget buildFlickerText(String episode) {
+    return Center(
+      child: DefaultTextStyle(
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 35,
+          color: Colors.white,
+          shadows: [
+            Shadow(
+              blurRadius: 7,
+              color: yellow,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        child: AnimatedTextKit(
+          repeatForever: true,
+          animatedTexts: [
+            FlickerAnimatedText(episode),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<CharactersCubit>(context).getAllCharacters();
     return Scaffold(
       backgroundColor: grey,
       body: CustomScrollView(
@@ -105,12 +146,13 @@ class CharacteresdetailsScreen extends StatelessWidget {
                         buildDivider(650),
                         const SizedBox(
                           height: 20,
-                        )
+                        ),
+                        displayRandomEpisode()
                       ]),
                 ),
                 const SizedBox(
                   height: 900,
-                )
+                ),
               ],
             ),
           )

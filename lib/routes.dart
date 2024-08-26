@@ -10,26 +10,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'constants/strings.dart';
 
 class AppRouter {
-   late CharactersRepo charactersRepo; ///////////??
- late CharactersCubit charactersCubit;
+  late CharactersRepo charactersRepo; ///////////??
+  late CharactersCubit charactersCubit;
   AppRouter() {
     charactersRepo = CharactersRepo(ApiService());
     charactersCubit = CharactersCubit(charactersRepo);
   }
-   Route<dynamic>? generateRoute(RouteSettings settings) {
+  Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case firstscreen:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (BuildContext context) =>
-                      charactersCubit,
+                  create: (BuildContext context) => charactersCubit,
                   child: const CharactersScreen(),
                 ));
       case secondscreen:
-      final character=settings.arguments as CharactersModel;
+        final character = settings.arguments as CharactersModel;
         return MaterialPageRoute(
-
-            builder: (_) => CharacteresdetailsScreen(character: character,));
+            builder: (_) => BlocProvider(
+                  create: (context) => CharactersCubit(charactersRepo),
+                  child: CharacteresdetailsScreen(
+                    character: character,
+                  ),
+                ));
     }
     return null;
   }
